@@ -113,10 +113,13 @@
 #include "G4Exp.hh"
 #include "G4Pow.hh"
 
+#include "G4UnitsTable.hh"
 
 G4WilsonAbrasionModel::G4WilsonAbrasionModel(G4bool useAblation1)
  :G4HadronicInteraction("G4WilsonAbrasion")
 {
+    G4cerr<<"G4WilsonAbrasion Primo costruttore "<<G4endl;
+    
   // Send message to stdout to advise that the G4Abrasion model is being used.
   PrintWelcomeMessage();
 
@@ -127,32 +130,38 @@ G4WilsonAbrasionModel::G4WilsonAbrasionModel(G4bool useAblation1)
   // No de-excitation handler has been supplied - define the default handler.
 
   theExcitationHandler  = new G4ExcitationHandler;
-  theExcitationHandlerx = new G4ExcitationHandler;
+  theExcitationHandler->SetDeexChannelsType( fCombined ); 
+  // G4cerr<<"theExcitationHandler  = new G4ExcitationHandler at " 
+  // 	<< __LINE__ << "th line of " << __FILE__ << "." << G4endl;
+  // theExcitationHandlerx = new G4ExcitationHandler;
   if (useAblation)
   {
     theAblation = new G4WilsonAblationModel;
     theAblation->SetVerboseLevel(verboseLevel);
     theExcitationHandler->SetEvaporation(theAblation);
-    theExcitationHandlerx->SetEvaporation(theAblation);
+    //    theExcitationHandlerx = new G4ExcitationHandler;
+    //    theExcitationHandlerx->SetEvaporation(theAblation);
   }
-  else
-  {
-    theAblation                      = NULL;
-    G4Evaporation * theEvaporation   = new G4Evaporation;
-    G4FermiBreakUp * theFermiBreakUp = new G4FermiBreakUp;
-    G4StatMF * theMF                 = new G4StatMF;
-    theExcitationHandler->SetEvaporation(theEvaporation);
-    theExcitationHandler->SetFermiModel(theFermiBreakUp);
-    theExcitationHandler->SetMultiFragmentation(theMF);
-    theExcitationHandler->SetMaxAandZForFermiBreakUp(12, 6);
-    theExcitationHandler->SetMinEForMultiFrag(5.0*MeV);
-
-    theEvaporation  = new G4Evaporation;
-    theFermiBreakUp = new G4FermiBreakUp;
-    theExcitationHandlerx->SetEvaporation(theEvaporation);
-    theExcitationHandlerx->SetFermiModel(theFermiBreakUp);
-    theExcitationHandlerx->SetMaxAandZForFermiBreakUp(12, 6);
-  }
+  // else
+  // {
+  //   theAblation                      = NULL;
+  //   G4Evaporation * theEvaporation   = new G4Evaporation;
+  //   G4FermiBreakUp * theFermiBreakUp = new G4FermiBreakUp;
+  //   G4StatMF * theMF                 = new G4StatMF;
+  //   theExcitationHandler->SetEvaporation(theEvaporation);
+  //   theExcitationHandler->SetFermiModel(theFermiBreakUp);
+  //   theExcitationHandler->SetMultiFragmentation(theMF);
+  //   theExcitationHandler->SetMaxAandZForFermiBreakUp(12, 6);
+  //   theExcitationHandler->SetMinEForMultiFrag(5.0*MeV);
+  //   G4cerr<<"theExcitationHandler->Set..."
+  // 	  << __LINE__ << "th line of " << __FILE__ << "." << G4endl; 
+    
+  //   theEvaporation  = new G4Evaporation;
+  //   theFermiBreakUp = new G4FermiBreakUp;
+  //   theExcitationHandlerx->SetEvaporation(theEvaporation);
+  //   theExcitationHandlerx->SetFermiModel(theFermiBreakUp);
+  //   theExcitationHandlerx->SetMaxAandZForFermiBreakUp(12, 6);
+  // }
 
   // Set the minimum and maximum range for the model (despite nomanclature,
   // this is in energy per nucleon number).  
@@ -188,7 +197,8 @@ void G4WilsonAbrasionModel::ModelDescription(std::ostream& outFile) const
 G4WilsonAbrasionModel::G4WilsonAbrasionModel(G4ExcitationHandler* aExcitationHandler)
 {
 // Send message to stdout to advise that the G4Abrasion model is being used.
-
+  G4cerr<<"G4WilsonAbrasion Secondo costruttore "<<aExcitationHandler<<G4endl;
+  
   PrintWelcomeMessage();
 
 // Set the default verbose level to 0 - no output.
@@ -204,12 +214,12 @@ G4WilsonAbrasionModel::G4WilsonAbrasionModel(G4ExcitationHandler* aExcitationHan
 // whether the spectators of the interaction are free following the abrasion.
 //
   theExcitationHandler             = aExcitationHandler;
-  theExcitationHandlerx            = new G4ExcitationHandler;
-  G4Evaporation * theEvaporation   = new G4Evaporation;
-  G4FermiBreakUp * theFermiBreakUp = new G4FermiBreakUp;
-  theExcitationHandlerx->SetEvaporation(theEvaporation);
-  theExcitationHandlerx->SetFermiModel(theFermiBreakUp);
-  theExcitationHandlerx->SetMaxAandZForFermiBreakUp(12, 6);
+  // theExcitationHandlerx            = new G4ExcitationHandler;
+  // G4Evaporation * theEvaporation   = new G4Evaporation;
+  // G4FermiBreakUp * theFermiBreakUp = new G4FermiBreakUp;
+  // theExcitationHandlerx->SetEvaporation(theEvaporation);
+  // theExcitationHandlerx->SetFermiModel(theFermiBreakUp);
+  // theExcitationHandlerx->SetMaxAandZForFermiBreakUp(12, 6);
 //
 //
 // Set the minimum and maximum range for the model (despite nomanclature, this
@@ -240,7 +250,7 @@ G4WilsonAbrasionModel::~G4WilsonAbrasionModel ()
 // The destructor doesn't have to do a great deal!
 //
   if (theExcitationHandler)  delete theExcitationHandler;
-  if (theExcitationHandlerx) delete theExcitationHandlerx;
+  //  if (theExcitationHandlerx) delete theExcitationHandlerx;
   if (useAblation)           delete theAblation;
 //  delete theExcitationHandler;
 //  delete theExcitationHandlerx;
@@ -642,10 +652,29 @@ G4HadFinalState *G4WilsonAbrasionModel::ApplyYourself (
   if (fragmentP !=NULL)
   {
     G4ReactionProductVector *products = NULL;
+    G4cout << __LINE__ << "th line of " << __FILE__ << "." << G4endl;
     if (fragmentP->GetZ_asInt() != fragmentP->GetA_asInt())
-      products = theExcitationHandler->BreakItUp(*fragmentP);
+      {
+	if (theExcitationHandler == NULL)
+	  G4cerr <<"theExcitationHandler == NULL"<<G4endl;
+	
+	G4cerr << __LINE__ << "th line of " << __FILE__ << "." << G4endl;
+	if (fragmentP->GetParticleDefinition() != NULL)
+	  G4cerr << fragmentP->GetParticleDefinition()->GetParticleName() <<G4endl;
+	else
+	  G4cerr << "undefined" <<G4endl;
+	G4cerr << " fragment A: "<<fragmentP->GetA() << " Z: "<<fragmentP->GetZ()
+	       << " ExE: "//<<fragmentP->GetExcitationEnergy()/keV<<" keV " << G4endl;
+	       << G4BestUnit(fragmentP->GetExcitationEnergy(),"Energy") << G4endl;
+	G4cerr << " excitons: " << fragmentP->GetNumberOfExcitons()
+	       << " holes: " << fragmentP->GetNumberOfHoles() <<G4endl;
+
+	products = theExcitationHandler->BreakItUp(*fragmentP);
+	G4cerr << __LINE__ << "th line of " << __FILE__ << "." << G4endl;
+      }
     else
-      products = theExcitationHandlerx->BreakItUp(*fragmentP);      
+      products = theExcitationHandler->BreakItUp(*fragmentP);
+      //      products = theExcitationHandlerx->BreakItUp(*fragmentP);      
     delete fragmentP;
     fragmentP = NULL;
   
@@ -679,10 +708,10 @@ G4HadFinalState *G4WilsonAbrasionModel::ApplyYourself (
   if (fragmentT != NULL)
   {
     G4ReactionProductVector *products = NULL;
-    if (fragmentT->GetZ_asInt() != fragmentT->GetA_asInt())
+    // if (fragmentT->GetZ_asInt() != fragmentT->GetA_asInt())
       products = theExcitationHandler->BreakItUp(*fragmentT);
-    else
-      products = theExcitationHandlerx->BreakItUp(*fragmentT);      
+    // else
+    //   products = theExcitationHandlerx->BreakItUp(*fragmentT);      
     delete fragmentT;
     fragmentT = NULL;
   
@@ -890,34 +919,34 @@ void G4WilsonAbrasionModel::SetUseAblation (G4bool useAblation1)
   if (useAblation != useAblation1)
   {
     useAblation = useAblation1;
-    delete theExcitationHandler;
-    delete theExcitationHandlerx;
-    theExcitationHandler  = new G4ExcitationHandler;
-    theExcitationHandlerx = new G4ExcitationHandler;
+    // delete theExcitationHandler;
+    // delete theExcitationHandlerx;
+    // theExcitationHandler  = new G4ExcitationHandler;
+    // theExcitationHandlerx = new G4ExcitationHandler;
     if (useAblation)
     {
       theAblation = new G4WilsonAblationModel;
       theAblation->SetVerboseLevel(verboseLevel);
       theExcitationHandler->SetEvaporation(theAblation);
-      theExcitationHandlerx->SetEvaporation(theAblation);
+      //      theExcitationHandlerx->SetEvaporation(theAblation);
     }
     else
     {
       theAblation                      = NULL;
-      G4Evaporation * theEvaporation   = new G4Evaporation;
-      G4FermiBreakUp * theFermiBreakUp = new G4FermiBreakUp;
-      G4StatMF * theMF                 = new G4StatMF;
-      theExcitationHandler->SetEvaporation(theEvaporation);
-      theExcitationHandler->SetFermiModel(theFermiBreakUp);
-      theExcitationHandler->SetMultiFragmentation(theMF);
-      theExcitationHandler->SetMaxAandZForFermiBreakUp(12, 6);
-      theExcitationHandler->SetMinEForMultiFrag(5.0*MeV);
+      // G4Evaporation * theEvaporation   = new G4Evaporation;
+      // G4FermiBreakUp * theFermiBreakUp = new G4FermiBreakUp;
+      // G4StatMF * theMF                 = new G4StatMF;
+      // theExcitationHandler->SetEvaporation(theEvaporation);
+      // theExcitationHandler->SetFermiModel(theFermiBreakUp);
+      // theExcitationHandler->SetMultiFragmentation(theMF);
+      // theExcitationHandler->SetMaxAandZForFermiBreakUp(12, 6);
+      // theExcitationHandler->SetMinEForMultiFrag(5.0*MeV);
 
-      theEvaporation  = new G4Evaporation;
-      theFermiBreakUp = new G4FermiBreakUp;
-      theExcitationHandlerx->SetEvaporation(theEvaporation);
-      theExcitationHandlerx->SetFermiModel(theFermiBreakUp);
-      theExcitationHandlerx->SetMaxAandZForFermiBreakUp(12, 6);
+      // theEvaporation  = new G4Evaporation;
+      // theFermiBreakUp = new G4FermiBreakUp;
+      // theExcitationHandlerx->SetEvaporation(theEvaporation);
+      // theExcitationHandlerx->SetFermiModel(theFermiBreakUp);
+      // theExcitationHandlerx->SetMaxAandZForFermiBreakUp(12, 6);
     }
   }
   return; 

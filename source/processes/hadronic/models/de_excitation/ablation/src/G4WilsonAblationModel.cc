@@ -76,6 +76,9 @@
 // 06 August 2015, A. Ribon, CERN
 // Migrated std::exp and std::pow to the faster G4Exp and G4Pow.
 //
+// 09 June 2017, C. Mancini Terracciano, INFN
+// Fixed bug on the initialization of Photon Evaporation model
+// 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -110,7 +113,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-G4WilsonAblationModel::G4WilsonAblationModel()
+G4WilsonAblationModel::G4WilsonAblationModel(G4VEvaporationChannel* photoEvaporation)
+  : G4VEvaporation()
 {
 //
 //
@@ -152,7 +156,12 @@ G4WilsonAblationModel::G4WilsonAblationModel()
 // Set verboseLevel default to no output.
 //
   verboseLevel = 0;
-  theChannelFactory = new G4EvaporationFactory(new G4PhotonEvaporation());
+
+  if(photoEvaporation) { SetPhotonEvaporation(photoEvaporation); }
+  else                 { SetPhotonEvaporation(new G4PhotonEvaporation()); }
+  
+  //  theChannelFactory = new G4EvaporationFactory(new G4PhotonEvaporation());
+  theChannelFactory = new G4EvaporationFactory(thePhotonEvaporation);
   theChannels = theChannelFactory->GetChannel();
 //
 //

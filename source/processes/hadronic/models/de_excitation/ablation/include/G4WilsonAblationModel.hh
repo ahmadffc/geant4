@@ -68,6 +68,9 @@
 // Moved theChannels and theChannelFactory to the base class, since they seem
 // to be common to all classes derived from G4VEvaporation.
 //
+// 09 June 2017, C. Mancini Terracciano, INFN
+// Changed contructor
+//
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -84,7 +87,7 @@
 class G4WilsonAblationModel : public G4VEvaporation
 {
   public:
-    G4WilsonAblationModel();
+    explicit G4WilsonAblationModel(G4VEvaporationChannel* photoEvaporation = nullptr);
     virtual ~G4WilsonAblationModel();
     
     typedef std::vector<G4ParticleDefinition*> VectorOfFragmentTypes;
