@@ -67,6 +67,7 @@ include_directories(${CMAKE_SOURCE_DIR}/source/processes/hadronic/models/im_r_ma
 include_directories(${CMAKE_SOURCE_DIR}/source/processes/hadronic/models/inclxx/utils/include)
 include_directories(${CMAKE_SOURCE_DIR}/source/processes/hadronic/models/inclxx/incl_physics/include)
 include_directories(${CMAKE_SOURCE_DIR}/source/processes/hadronic/models/inclxx/interface/include)
+include_directories(${CMAKE_SOURCE_DIR}/source/processes/hadronic/models/buu/include)
 include_directories(${CMAKE_SOURCE_DIR}/source/processes/hadronic/models/lend/include)
 include_directories(${CMAKE_SOURCE_DIR}/source/processes/hadronic/models/lepto_nuclear/include)
 include_directories(${CMAKE_SOURCE_DIR}/source/processes/hadronic/models/particle_hp/include)
@@ -87,12 +88,14 @@ GEANT4_DEFINE_MODULE(NAME G4phys_ctor_ions
     HEADERS
         G4IonBinaryCascadePhysics.hh
         G4IonINCLXXPhysics.hh
+        G4IonBUUPhysics.hh	
         G4IonPhysics.hh
         G4IonPhysicsPHP.hh
         G4IonQMDPhysics.hh
     SOURCES
         G4IonBinaryCascadePhysics.cc
         G4IonINCLXXPhysics.cc
+        G4IonBUUPhysics.cc	
         G4IonPhysics.cc
         G4IonPhysicsPHP.cc
         G4IonQMDPhysics.cc
@@ -137,6 +140,8 @@ GEANT4_DEFINE_MODULE(NAME G4phys_ctor_ions
         G4hadronic_inclxx_interface
         G4hadronic_inclxx_physics
         G4hadronic_inclxx_utils
+        G4hadronic_buu
+        G4hadronic_buu_physics	
         G4hadronic_mgt
         G4hadronic_proc
         G4hadronic_qgstring
