@@ -168,7 +168,6 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
 	      // 	  momentum *= *toDirectKinematics;
 	      // 	  momentum.setVect(-momentum.vect());
 	      // 	}
-	      
 	      // Set the four-momentum of the reaction products
 	      p->Set4Momentum(momentum);
 	      fourMomentumOut += momentum;
@@ -185,10 +184,14 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
 	{
 	  const G4double nuclearMass = G4NucleiProperties::GetNuclearMass(theModel->A, theModel->Z) + theModel->Eecc;
 	  G4ThreeVector spin(theModel->spinx, theModel->spiny, theModel->spinz);
-	  G4Fragment remnant(theModel->A, theModel->Z,
-			     G4LorentzVector(theModel->px, theModel->py, theModel->pz,
-					     nuclearMass + theModel->EK)
-			     );
+	  G4LorentzVector fourMomentum(theModel->px, theModel->py, theModel->pz,
+				       nuclearMass + theModel->EK);
+
+	  // Apply the toLabFrame rotation
+	  fourMomentum *= toLabFrame;
+	  spin *= toLabFrame3;
+	  
+	  G4Fragment remnant(theModel->A, theModel->Z, fourMomentum );	  
 	  remnant.SetAngularMomentum(spin);
 	  G4ReactionProductVector *deExcitationResult = theDeExcitation->DeExcite(remnant);
 	  for(G4ReactionProductVector::iterator fragment = deExcitationResult->begin();
