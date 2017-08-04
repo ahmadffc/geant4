@@ -83,7 +83,7 @@ G4BUU::~G4BUU()
 
 G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& theNucleus)
 {
-  G4cout<<"G4BUU::ApplyYourself"<<G4endl;
+  // G4cout<<"G4BUU::ApplyYourself"<<G4endl;
   
   G4HadProjectile const *aProjectileTrack = &aTrack;
   
@@ -147,12 +147,13 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
   // }
   
   G4LorentzVector fourMomentumOut;
-
-  for (currentFragment = theModel->GetFirstFragmentIdInEvent();
-       currentFragment<= theModel->GetLastFragmentIdInEvent();
+  G4int firstOfThisEvent = theModel->GetFirstFragmentIdInEvent();
+  G4int lastOfThisEvent = theModel->GetLastFragmentIdInEvent(); 
+  for (currentFragment = firstOfThisEvent;
+       currentFragment<= lastOfThisEvent;
        currentFragment++)
     {
-      G4cout<<"G4BUU::ApplyYourself currentFragment: "<<currentFragment<<G4endl;
+      // G4cout<<"G4BUU::ApplyYourself currentFragment: "<<currentFragment<<G4endl;
       
       theModel->GetEntry(currentFragment);
 

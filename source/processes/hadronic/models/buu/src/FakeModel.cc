@@ -1,3 +1,4 @@
+#include <iostream>
 #include "FakeModel.hh"
 
 
@@ -69,6 +70,7 @@ Int_t FakeModel::GetEntry(Long64_t entry)
 
 size_t FakeModel::GetFirstFragmentIdInEvent()
 {
+  // std::cout<<"FakeModel::GetFirstFragmentIdInEvent "<<fCurrent<<std::endl;
   return fCurrent;
 }
 
@@ -83,6 +85,7 @@ size_t FakeModel::GetLastFragmentIdInEvent()
       if(evt != prevEvt)
 	{
 	  fCurrent = jentry;
+	  // std::cout<<"FakeModel::GetLastFragmentIdInEvent "<<jentry-1<<std::endl;
 	  return jentry-1;
 	}
       prevEvt = evt;
