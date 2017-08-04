@@ -83,6 +83,8 @@ G4BUU::~G4BUU()
 
 G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& theNucleus)
 {
+  G4cout<<"G4BUU::ApplyYourself"<<G4endl;
+  
   G4HadProjectile const *aProjectileTrack = &aTrack;
   
   G4ParticleDefinition const * const trackDefinition = aTrack.GetDefinition();
@@ -145,12 +147,14 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
   // }
   
   G4LorentzVector fourMomentumOut;
-  
-  G4int prevEvt = 0;
-  for( ; theModel->evt==prevEvt; currentFragment++)
+
+  for (currentFragment = theModel->GetFirstFragmentIdInEvent();
+       currentFragment<= theModel->GetLastFragmentIdInEvent();
+       currentFragment++)
     {
+      G4cout<<"G4BUU::ApplyYourself currentFragment: "<<currentFragment<<G4endl;
+      
       theModel->GetEntry(currentFragment);
-      prevEvt=theModel->evt;
 
       G4double excitationEnergy = theModel->Eecc;
       if(theModel->Eecc == 0)

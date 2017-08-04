@@ -29,7 +29,6 @@ void FakeModel::Init(TTree *tree)
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
-   fCurrent = -1;
    fChain->SetMakeClass(1);
 
    fChain->SetBranchAddress("evt", &evt, &b_evt);
@@ -50,7 +49,9 @@ void FakeModel::Init(TTree *tree)
    fChain->SetBranchAddress("theta", &theta, &b_theta);
    fChain->SetBranchAddress("phi", &phi, &b_phi);
    fChain->SetBranchAddress("EK", &EK, &b_EK);
-
+   
+   fNentries = fChain->GetEntriesFast();
+   fCurrent = 0;
 }
 
 Int_t FakeModel::GetEntry(Long64_t entry)
@@ -60,8 +61,31 @@ Int_t FakeModel::GetEntry(Long64_t entry)
    return fChain->GetEntry(entry);
 }
 
-Int_t FakeModel::NextEntry()
+// Int_t FakeModel::NextEntry()
+// {
+//   fCurrent++;
+//   return GetEntry(fCurrent);
+// }
+
+size_t FakeModel::GetFirstFragmentIdInEvent()
 {
-  fCurrent++;
-  return GetEntry(fCurrent);
+  return fCurrent;
+}
+
+size_t FakeModel::GetLastFragmentIdInEvent()
+{
+  fChain->GetEntry(fCurrent);
+  int prevEvt = evt; 
+  Long64_t nbytes = 0, nb = 0;
+  for (Long64_t jentry=fCurrent; jentry<fNentries; jentry++)
+    {
+      nb = fChain->GetEntry(jentry);   nbytes += nb;
+      if(evt != prevEvt)
+	{
+	  fCurrent = jentry;
+	  return jentry-1;
+	}
+      prevEvt = evt;
+    }
+
 }

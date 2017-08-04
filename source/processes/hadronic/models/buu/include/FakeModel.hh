@@ -15,13 +15,13 @@ public:
   FakeModel(const std::string file_name);
   ~FakeModel();
 
+   size_t GetFirstFragmentIdInEvent();
+   size_t GetLastFragmentIdInEvent();
+
   virtual int    GetEntry(Long64_t entry);
-  virtual int    NextEntry();
-  virtual void     Init(TTree *tree);
-  
+  // virtual int    NextEntry();
   
   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
-  int           fCurrent; 
   
   // Declaration of leaf types
   int           evt;
@@ -64,5 +64,8 @@ private:
   TBranch        *b_phi;   //!
   TBranch        *b_EK;   //!
 
+  int           fCurrent; 
+  virtual void     Init(TTree *tree);
+  Long64_t fNentries;  
 };
 #endif
