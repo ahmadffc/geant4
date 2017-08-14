@@ -160,8 +160,8 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
       G4double excitationEnergy = theModel->Eecc;
       if(theModel->Eecc == 0)
 	{      
-	  G4int PDGCode = 0;
-	  G4DynamicParticle *p = toG4Particle(theModel->A, theModel->Z, PDGCode, theModel->EK, theModel->px, theModel->py, theModel->pz);
+	  // G4int PDGCode = 0;
+	  G4DynamicParticle *p = toG4Particle(theModel->A, theModel->Z, theModel->EK, theModel->px, theModel->py, theModel->pz);
 	  if(p != 0)
 	    {
 	      G4LorentzVector momentum = p->Get4Momentum();
@@ -229,15 +229,16 @@ G4ReactionProductVector* G4BUU::Propagate(G4KineticTrackVector* , G4V3DNucleus* 
   return 0;
 }
 
-G4ParticleDefinition *G4BUU::toG4ParticleDefinition(G4int A, G4int Z, G4int PDGCode) const {
+G4ParticleDefinition *G4BUU::toG4ParticleDefinition(G4int A, G4int Z) const {
   if     (A == 1 && Z == 1)  return G4Proton::Proton();
   else if(A == 1 && Z == 0)  return G4Neutron::Neutron();
   else if(A == 0 && Z == 1)  return G4PionPlus::PionPlus();
   else if(A == 0 && Z == -1) return G4PionMinus::PionMinus();
   else if(A == 0 && Z == 0)  {
-     if (PDGCode == 221) return G4Eta::Eta();
-     else if (PDGCode == 22)  return G4Gamma::Gamma();
-     else return G4PionZero::PionZero();
+    // if (PDGCode == 221) return G4Eta::Eta();
+    // else if (PDGCode == 22)
+    return G4Gamma::Gamma();
+    // else return G4PionZero::PionZero();
   }
   else if(A == 2 && Z == 1)  return G4Deuteron::Deuteron();
   else if(A == 3 && Z == 1)  return G4Triton::Triton();
@@ -250,11 +251,11 @@ G4ParticleDefinition *G4BUU::toG4ParticleDefinition(G4int A, G4int Z, G4int PDGC
   }
 }
 
-G4DynamicParticle *G4BUU::toG4Particle(G4int A, G4int Z, G4int PDGCode,
+G4DynamicParticle *G4BUU::toG4Particle(G4int A, G4int Z, //G4int PDGCode,
 						 G4double kinE,
 						 G4double px,
                                                  G4double py, G4double pz) const {
-  const G4ParticleDefinition *def = toG4ParticleDefinition(A, Z, PDGCode);
+  const G4ParticleDefinition *def = toG4ParticleDefinition(A, Z);//, PDGCode);
   if(def == 0) { // Check if we have a valid particle definition
     return 0;
   }

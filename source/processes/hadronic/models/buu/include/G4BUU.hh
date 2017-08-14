@@ -122,10 +122,10 @@ private:
   G4BUU &operator=(G4BUU const &rhs);
 
     /// \brief Convert an INCL particle to a G4DynamicParticle
-  G4DynamicParticle *toG4Particle(G4int A, G4int Z, G4int PDGCode , G4double kinE, G4double px, G4double py, G4double pz) const;
+  G4DynamicParticle *toG4Particle(G4int A, G4int Z, G4double kinE, G4double px, G4double py, G4double pz) const;
   
   /// \brief Convert A and Z to a G4ParticleDefinition
-  G4ParticleDefinition *toG4ParticleDefinition (G4int A, G4int Z, G4int PDGCode) const;
+  G4ParticleDefinition *toG4ParticleDefinition (G4int A, G4int Z) const;
 
   G4VPreCompoundModel *thePreCompoundModel;
 
