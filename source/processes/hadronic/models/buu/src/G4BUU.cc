@@ -135,6 +135,13 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
   // G4cout <<"toZ = " << toZ << G4endl;
   // G4cout <<"toLabFrame = " << toLabFrame << G4endl;
 
+  G4bool theEventIsGood = false;
+  const G4int initialA = trackA + nucleusA;
+  const G4int initialZ = trackZ + nucleusZ;
+  do
+    {
+      G4int totalEventA = 0, totalEventZ = 0;
+      
   theResult.Clear(); // Make sure the output data structure is clean.
   theResult.SetStatusChange(stopAndKill);
 
@@ -166,6 +173,10 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
       G4ThreeVector spin(theModel->spinx, theModel->spiny, theModel->spinz);
       
       G4double excitationEnergy = theModel->Eecc;
+
+      totalEventA += A_frag;
+      totalEventZ += Z_frag;      
+      
       if(excitationEnergy == 0)
 	{      
 	  // G4int PDGCode = 0;
@@ -231,8 +242,25 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
 	}
       
     }//loop on all the products of the model
+
+  if( (totalEventA == initialA) && (totalEventZ == initialZ) )
+    {
+      theEventIsGood = true;
+    }
+  else
+    {
+      G4int epReportLevel = getenv("G4Hadronic_epReportLevel") ?
+	strtol(getenv("G4Hadronic_epReportLevel"),0,10) : 0;
+      G4ExceptionDescription desc;
+      desc << "Warning: non-conservation detected of mass or charge in BUU, will "
+	   << (epReportLevel<0 ? "abort the event" :  "re-sample the interaction") << G4endl
+	   << " initial A = " << initialA << " total fragments A = " << totalEventA << G4endl
+	   << " initial Z = " << initialZ << " total fragments Z = " << totalEventZ << G4endl;      
+      G4Exception("G4BUU::ApplyYourself", "had???", 
+		  epReportLevel<0 ? EventMustBeAborted : JustWarning, desc);
+    }
   
-  
+    }while(!theEventIsGood);
 
   return &theResult;
 }
