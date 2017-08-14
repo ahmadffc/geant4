@@ -157,11 +157,20 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
       
       theModel->GetEntry(currentFragment);
 
+      G4int A_frag = theModel->A;
+      G4int Z_frag = theModel->Z;
+      G4double Ek_frag = theModel->EK;
+      G4double px_frag = theModel->px;
+      G4double py_frag = theModel->py;
+      G4double pz_frag = theModel->pz;      
+      G4ThreeVector spin(theModel->spinx, theModel->spiny, theModel->spinz);
+      
       G4double excitationEnergy = theModel->Eecc;
-      if(theModel->Eecc == 0)
+      if(excitationEnergy == 0)
 	{      
 	  // G4int PDGCode = 0;
-	  G4DynamicParticle *p = toG4Particle(theModel->A, theModel->Z, theModel->EK, theModel->px, theModel->py, theModel->pz);
+	  // G4DynamicParticle *p = toG4Particle(theModel->A, theModel->Z, theModel->EK, theModel->px, theModel->py, theModel->pz);
+	  G4DynamicParticle *p = toG4Particle(A_frag, Z_frag, Ek_frag, px_frag, py_frag, pz_frag);
 	  if(p != 0)
 	    {
 	      G4LorentzVector momentum = p->Get4Momentum();
@@ -187,16 +196,19 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
 	}
       else //it has to be de-excited
 	{
-	  const G4double nuclearMass = G4NucleiProperties::GetNuclearMass(theModel->A, theModel->Z) + theModel->Eecc;
-	  G4ThreeVector spin(theModel->spinx, theModel->spiny, theModel->spinz);
-	  G4LorentzVector fourMomentum(theModel->px, theModel->py, theModel->pz,
-				       nuclearMass + theModel->EK);
+	  // const G4double nuclearMass = G4NucleiProperties::GetNuclearMass(theModel->A, theModel->Z) + theModel->Eecc;
+	  const G4double nuclearMass = G4NucleiProperties::GetNuclearMass(A_frag, Z_frag) + excitationEnergy;
+
+	  // G4LorentzVector fourMomentum(theModel->px, theModel->py, theModel->pz,
+	  // 			       nuclearMass + theModel->EK);
+	  G4LorentzVector fourMomentum(px_frag, py_frag, pz_frag,
+				       nuclearMass + Ek_frag);
 
 	  // Apply the toLabFrame rotation
 	  fourMomentum *= toLabFrame;
 	  spin *= toLabFrame3;
 	  
-	  G4Fragment remnant(theModel->A, theModel->Z, fourMomentum );	  
+	  G4Fragment remnant(A_frag, Z_frag, fourMomentum );	  
 	  remnant.SetAngularMomentum(spin);
 	  G4ReactionProductVector *deExcitationResult = theDeExcitation->DeExcite(remnant);
 	  for(G4ReactionProductVector::iterator fragment = deExcitationResult->begin();
