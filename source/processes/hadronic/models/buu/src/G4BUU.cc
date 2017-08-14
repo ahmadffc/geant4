@@ -142,8 +142,12 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
     {
       G4int totalEventA = 0, totalEventZ = 0;
       
-  theResult.Clear(); // Make sure the output data structure is clean.
-  theResult.SetStatusChange(stopAndKill);
+      // Make sure the output data structure is clean.
+      const G4int nSecondaries = theResult.GetNumberOfSecondaries();
+      for(G4int j=0; j<nSecondaries; ++j)
+	delete theResult.GetSecondary(j)->GetParticle();      
+      theResult.Clear(); 
+      theResult.SetStatusChange(stopAndKill);
 
   std::list<G4Fragment> remnants;
   
@@ -255,7 +259,15 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
       desc << "Warning: non-conservation detected of mass or charge in BUU, will "
 	   << (epReportLevel<0 ? "abort the event" :  "re-sample the interaction") << G4endl
 	   << " initial A = " << initialA << " total fragments A = " << totalEventA << G4endl
-	   << " initial Z = " << initialZ << " total fragments Z = " << totalEventZ << G4endl;      
+	   << " initial Z = " << initialZ << " total fragments Z = " << totalEventZ << G4endl;
+
+      // const G4int nSecondaries = theResult.GetNumberOfSecondaries();
+      // for(G4int j=0; j<nSecondaries; ++j)
+      // 	{
+      // 	  theResult.GetSecondary(j)->GetParticle();
+      // 	  desc<<
+      // 	}
+	  
       G4Exception("G4BUU::ApplyYourself", "had???", 
 		  epReportLevel<0 ? EventMustBeAborted : JustWarning, desc);
     }
