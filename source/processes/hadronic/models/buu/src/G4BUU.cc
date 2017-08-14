@@ -122,11 +122,11 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
   // transform to the projectile because when creating the INCL++
   // projectile particle; \see{toINCLKineticEnergy} needs to use only the
   // projectile energy (direction is simply assumed to be along z-axis).
-  G4RotationMatrix toZ;
-  toZ.rotateZ(-projectileMomentum.phi());
-  toZ.rotateY(-projectileMomentum.theta());
-  G4RotationMatrix toLabFrame3 = toZ.inverse();
-  G4LorentzRotation toLabFrame(toLabFrame3);
+  // G4RotationMatrix toZ;
+  // toZ.rotateZ(-projectileMomentum.phi());
+  // toZ.rotateY(-projectileMomentum.theta());
+  // G4RotationMatrix toLabFrame3 = toZ.inverse();
+  // G4LorentzRotation toLabFrame(toLabFrame3);
   // However, it turns out that the projectile given to us by G4
   // hadronic framework is already going in the direction of the
   // z-axis so this rotation is actually unnecessary. Both toZ and
@@ -157,7 +157,7 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
   //   toDirectKinematics = new G4LorentzRotation(toInverseKinematics->inverse());
   // }
   
-  G4LorentzVector fourMomentumOut;
+  // G4LorentzVector fourMomentumOut;
   G4int firstOfThisEvent = theModel->GetFirstFragmentIdInEvent();
   G4int lastOfThisEvent = theModel->GetLastFragmentIdInEvent(); 
   for (currentFragment = firstOfThisEvent;
@@ -188,9 +188,9 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
 	  G4DynamicParticle *p = toG4Particle(A_frag, Z_frag, Ek_frag, px_frag, py_frag, pz_frag);
 	  if(p != 0)
 	    {
-	      G4LorentzVector momentum = p->Get4Momentum();
+	      // G4LorentzVector momentum = p->Get4Momentum();
 	      // Apply the toLabFrame rotation
-	      momentum *= toLabFrame;
+	      // momentum *= toLabFrame;
 	      // // Apply the inverse-kinematics boost
 	      // if(inverseKinematics)
 	      // 	{
@@ -198,8 +198,8 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
 	      // 	  momentum.setVect(-momentum.vect());
 	      // 	}
 	      // Set the four-momentum of the reaction products
-	      p->Set4Momentum(momentum);
-	      fourMomentumOut += momentum;
+	      // p->Set4Momentum(momentum);
+	      // fourMomentumOut += momentum;
 	      theResult.AddSecondary(p);
 	      
 	    }
@@ -220,8 +220,8 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
 				       nuclearMass + Ek_frag);
 
 	  // Apply the toLabFrame rotation
-	  fourMomentum *= toLabFrame;
-	  spin *= toLabFrame3;
+	  // fourMomentum *= toLabFrame;
+	  // spin *= toLabFrame3;
 	  
 	  G4Fragment remnant(A_frag, Z_frag, fourMomentum );	  
 	  remnant.SetAngularMomentum(spin);
@@ -268,7 +268,7 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
       // 	  desc<<
       // 	}
 	  
-      G4Exception("G4BUU::ApplyYourself", "had???", 
+      G4Exception("G4BUU::ApplyYourself", "buu001", 
 		  epReportLevel<0 ? EventMustBeAborted : JustWarning, desc);
     }
   
@@ -326,3 +326,11 @@ void G4BUU::ModelDescription(std::ostream& outFile) const {
 G4String const &G4BUU::GetDeExcitationModelName() const {
   return theDeExcitation->GetModelName();
 }
+
+// void G4BUU::BoostToLabFrame()
+// {
+//   const G4int nSecondaries = theResult.GetNumberOfSecondaries();
+//   for(G4int j=0; j<nSecondaries; ++j)
+//     {
+//    G4HadSecondary*  theResult.GetSecondary(j)->GetParticle();
+// }
