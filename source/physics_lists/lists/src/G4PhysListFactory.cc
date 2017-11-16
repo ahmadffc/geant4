@@ -180,19 +180,19 @@ G4PhysListFactory::GetReferencePhysList(const G4String& name)
     p->SetVerboseLevel(0);
     if(0 < em_opt) {
       if(1 == em_opt) { 
-	p->ReplacePhysics(new G4EmStandardPhysics_option1(verbose)); 
+	p->ReplacePhysics(new G4EmStandardPhysics_option1(verbose)); //EMV
       } else if(2 == em_opt) {
-	p->ReplacePhysics(new G4EmStandardPhysics_option2(verbose)); 
+	p->ReplacePhysics(new G4EmStandardPhysics_option2(verbose)); //EMX
       } else if(3 == em_opt) {
-	p->ReplacePhysics(new G4EmStandardPhysics_option3(verbose)); 
+	p->ReplacePhysics(new G4EmStandardPhysics_option3(verbose)); //EMY
       } else if(4 == em_opt) {
-	p->ReplacePhysics(new G4EmStandardPhysics_option4(verbose)); 
+	p->ReplacePhysics(new G4EmStandardPhysics_option4(verbose)); //EMZ
       } else if(5 == em_opt) {
-	p->ReplacePhysics(new G4EmLivermorePhysics(verbose)); 
+	p->ReplacePhysics(new G4EmLivermorePhysics(verbose)); //LIV
       } else if(6 == em_opt) {
-	p->ReplacePhysics(new G4EmPenelopePhysics(verbose)); 
+	p->ReplacePhysics(new G4EmPenelopePhysics(verbose)); //PEN
       } else if(7 == em_opt) {
-	p->ReplacePhysics(new G4EmStandardPhysicsGS(verbose)); 
+	p->ReplacePhysics(new G4EmStandardPhysicsGS(verbose)); //GS
       }
     }
     p->SetVerboseLevel(ver);
