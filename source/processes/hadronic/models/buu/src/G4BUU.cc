@@ -74,6 +74,8 @@ G4BUU::G4BUU(G4VPreCompoundModel * const aPreCompound) :
 
   theModel = new FakeModel("blob-hot.root");
   currentFragment = 0;
+
+  G4cout<<"G4BUU Checking: subtracting 1.0 MeV per nucleon to fragment excitation energy"<<G4endl;
 }
 
 G4BUU::~G4BUU()
@@ -172,13 +174,15 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
 
       G4int A_frag = theModel->A;
       G4int Z_frag = theModel->Z;
-      G4double Ek_frag = theModel->EK;
-      G4double px_frag = theModel->px;
-      G4double py_frag = theModel->py;
-      G4double pz_frag = theModel->pz;      
+      G4double Ek_frag = theModel->EK*CLHEP::MeV;
+      G4double px_frag = theModel->px*CLHEP::MeV;
+      G4double py_frag = theModel->py*CLHEP::MeV;
+      G4double pz_frag = theModel->pz*CLHEP::MeV;      
       G4ThreeVector spin(theModel->spinx, theModel->spiny, theModel->spinz);
       
-      G4double excitationEnergy = theModel->Eecc;
+      G4double excitationEnergy = theModel->Eecc*CLHEP::MeV;
+      excitationEnergy = excitationEnergy - 1.*CLHEP::MeV *A_frag;//tolgo 0.5 MeV per nucleone
+      if (excitationEnergy < 0.) excitationEnergy=0.;
 
       totalEventA += A_frag;
       totalEventZ += Z_frag;      
