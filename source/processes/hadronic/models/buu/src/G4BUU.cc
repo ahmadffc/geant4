@@ -127,6 +127,8 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
   // toZ.rotateY(-projectileMomentum.theta());
   // G4RotationMatrix toLabFrame3 = toZ.inverse();
   // G4LorentzRotation toLabFrame(toLabFrame3);
+  const G4double beta = sqrt(trackKinE*trackKinE +2.*trackKinE*theTrackMass)/(trackKinE+2.*theTrackMass);
+  const G4LorentzRotation toLabFrame(0., 0., beta);
   // However, it turns out that the projectile given to us by G4
   // hadronic framework is already going in the direction of the
   // z-axis so this rotation is actually unnecessary. Both toZ and
@@ -188,9 +190,9 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
 	  G4DynamicParticle *p = toG4Particle(A_frag, Z_frag, Ek_frag, px_frag, py_frag, pz_frag);
 	  if(p != 0)
 	    {
-	      // G4LorentzVector momentum = p->Get4Momentum();
+	      G4LorentzVector momentum = p->Get4Momentum();
 	      // Apply the toLabFrame rotation
-	      // momentum *= toLabFrame;
+	      momentum *= toLabFrame;
 	      // // Apply the inverse-kinematics boost
 	      // if(inverseKinematics)
 	      // 	{
@@ -198,7 +200,7 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
 	      // 	  momentum.setVect(-momentum.vect());
 	      // 	}
 	      // Set the four-momentum of the reaction products
-	      // p->Set4Momentum(momentum);
+	      p->Set4Momentum(momentum);
 	      // fourMomentumOut += momentum;
 	      theResult.AddSecondary(p);
 	      
@@ -220,7 +222,7 @@ G4HadFinalState* G4BUU::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& 
 				       nuclearMass + Ek_frag);
 
 	  // Apply the toLabFrame rotation
-	  // fourMomentum *= toLabFrame;
+	  fourMomentum *= toLabFrame;
 	  // spin *= toLabFrame3;
 	  
 	  G4Fragment remnant(A_frag, Z_frag, fourMomentum );	  

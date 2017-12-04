@@ -127,6 +127,8 @@ private:
   /// \brief Convert A and Z to a G4ParticleDefinition
   G4ParticleDefinition *toG4ParticleDefinition (G4int A, G4int Z) const;
 
+  // void BoostToLabFrame();
+  
   G4VPreCompoundModel *thePreCompoundModel;
 
   G4HadFinalState theResult;
