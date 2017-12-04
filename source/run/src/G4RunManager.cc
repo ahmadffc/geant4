@@ -234,9 +234,12 @@ void G4RunManager::DeleteUserInitializations()
     }
     if(physicsList)
     {
+      	G4cout << "G4RunManager::DeleteUserInitializations() START" << G4endl;
         delete physicsList;
         physicsList = 0;
-        if(verboseLevel>1) G4cout << "UserPhysicsList deleted." << G4endl;
+        // if(verboseLevel>1)
+	G4cout << "UserPhysicsList deleted." << G4endl;
+      	G4cout << "G4RunManager::DeleteUserInitializations() END" << G4endl;	
     }
     if(userActionInitialization)
     {
